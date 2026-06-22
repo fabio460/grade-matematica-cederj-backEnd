@@ -1,0 +1,51 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+    
+}
+
+datasource db {
+  provider = "mongodb"
+  //url=env("DATABASE_URL") 
+}
+
+
+
+model Usuario {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  nome  String
+  email String @unique
+  senha String
+  periodo Periodo[]
+}
+
+model Periodo {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  titulo     String
+  usuarioId  String @db.ObjectId
+  usuario    Usuario  @relation(fields: [usuarioId], references: [id])
+  disciplinas Disciplina[]
+}
+model Disciplina {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  nome  String
+  codigo_disciplina String @unique
+  grupo String
+  semestre String
+  horario String
+  tipo String
+  carga_horaria Int
+  preRequisitos String[] 
+  disciplinaId String @db.ObjectId
+  periodoId String @db.ObjectId
+  periodo Periodo @relation(fields: [periodoId], references: [id])
+}
+// model PreRequisito {
+//   id String @id @default(auto()) @map("_id") @db.ObjectId
+//   disciplinaId String @db.ObjectId
+//   disciplina Disciplina @relation(fields: [disciplinaId], references: [id])
+// }
